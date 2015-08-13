@@ -4,10 +4,11 @@ var url = require('url');
 var mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/test');
-//Model
-var nutritionInfo = mongoose.model('nutritionInfo', 
+
+var Cat = mongoose.model('Cat', { name: String });
+var NutritionInfo = mongoose.model('NutritionInfo',
 {
-  	food_id: {
+  	food_name: {
   		type: 'string'
   	},
   	Calories:{
@@ -57,6 +58,21 @@ var nutritionInfo = mongoose.model('nutritionInfo',
   	}
   })
 
+var kitty = new Cat({ name: 'Zildjian' });
+kitty.save(function (err) {
+  if (err){
+  	console.log(err);
+  } 
+  console.log('meow');
+});
+
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function (callback) {
+  console.log('connection opended')
+});
+
 var mainbase = "http://www.myfitnesspal.com";
 var jsonarray = [];
 var baseurlOptions = {
@@ -84,9 +100,9 @@ function nutritionInfoParser (suburl, callback){
 						jsonarray.push(json);
 					})					
 			});
-			//console.log(jsonarray)
+
 			var foodname = $('h2.food-description').text();
-			
+			//console.log(jsonarray)
 			callback(jsonarray,foodname)
 		}
 	})
@@ -99,10 +115,8 @@ function foodCollector(){
 			$('ul.food_search_results').each(function(){				
 				 $(this).children('li').each(function(){
 				 	var url = $(this).find('div.food_description > a').attr('href');		
-				 	nutritionInfoParser(url.toString(), function(jsarray,foodname){
-				 		//res.write(JSON.stringify(jsarray))
-				 		jsonarray = []
-				 		//console.log(jsarray);
+				 	nutritionInfoParser(url.toString(), function(jsarray,foodname){				 		
+				 		jsonarray = []				 	
 				 		insertFoodAndNutrition(jsarray,foodname)
 				 	})
 				});		
@@ -115,7 +129,7 @@ foodCollector();
 
 function insertFoodAndNutrition(jsarray,foodname){
 	var nutritionInfoObjectWithDynamicKeys = {};
-		nutritionInfoObjectWithDynamicKeys['food_id'] = foodname;
+	nutritionInfoObjectWithDynamicKeys['food_name'] = foodname; 
 	for(var obj in jsarray){
 		if(!(jsarray[obj].name == '&#xA0;')){
 			var record = jsarray[obj];				 			
@@ -123,7 +137,7 @@ function insertFoodAndNutrition(jsarray,foodname){
 		}
 	}
 	console.log(nutritionInfoObjectWithDynamicKeys);
-	var nutriInfo = new nutritionInfo( nutritionInfoObjectWithDynamicKeys );
+	var nutriInfo = new NutritionInfo( nutritionInfoObjectWithDynamicKeys );
 	nutriInfo.save(function (err) {
 	  if (err){
 	  	console.log(err);
