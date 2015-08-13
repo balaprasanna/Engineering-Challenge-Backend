@@ -6,12 +6,14 @@
  */
 
 module.exports = {
-	// : function (req, res) {		
-	// return res.view('static/search', {
- //      user: "Prasanna",
- //      //corndogs: theUser.corndogCollection
- //    });
 	
-	//}
+	Search: function (req, res) {		
+	
+	return res.view('static/search', {
+      user: "Prasanna"
+    });
+
+	}
+
 };
 

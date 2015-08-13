@@ -36,9 +36,14 @@ module.exports.routes = {
     view: 'homepage'
   },
 
-  '/Search': {
-    view: 'static/search'
-  }
+  'get /Search': { view: 'static/search' },
+
+  // '/Search': {
+  //   //view: 'static/search'
+    
+  //   //controller: 'Search',
+  //   //action: 'Search'
+  // }
 
   /***************************************************************************
   *                                                                          *
