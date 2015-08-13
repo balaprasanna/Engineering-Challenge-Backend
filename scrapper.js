@@ -1,6 +1,61 @@
 var request = require('request');
 var cheerio = require('cheerio');
 var url = require('url');
+var mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/test');
+//Model
+var nutritionInfo = mongoose.model('nutritionInfo', 
+{
+  	food_id: {
+  		type: 'string'
+  	},
+  	Calories:{
+  		type: 'string'	
+  	},
+  	Sodium:{
+  		type: 'string'	
+  	},
+  	'Total Fat':{
+  		type: 'string'	
+  	},
+  	Potassium:{
+  		type: 'string'	
+  	},
+  	'Total Carbs':{
+  		type: 'string'	
+  	},
+  	Polyunsaturated:{
+  		type: 'string'	
+  	},
+  	'Dietary Fiber':{
+  		type: 'string'	
+  	},
+  	Monounsaturated:{
+  		type: 'string'	
+  	},
+  	Sugars:{
+  		type: 'string'	
+  	},
+  	Trans:{
+  		type: 'string'	
+  	},
+  	Protein:{
+  		type: 'string'	
+  	},
+  	'Vitamin A':{
+  		type: 'string'	
+  	},
+  	Calcium:{
+  		type: 'string'	
+  	},
+  	'Vitamin C':{
+  		type: 'string'	
+  	},
+  	Iron:{
+  		type: 'string'	
+  	}
+  })
 
 var mainbase = "http://www.myfitnesspal.com";
 var jsonarray = [];
@@ -45,8 +100,8 @@ function foodCollector(){
 				 	nutritionInfoParser(url.toString(), function(jsarray){
 				 		//res.write(JSON.stringify(jsarray))
 				 		jsonarray = []
-				 		console.log(jsarray);
-				 		//insertFoodAndNutrition(jsarray)
+				 		//console.log(jsarray);
+				 		insertFoodAndNutrition(jsarray)
 				 	})
 				});		
 			})
@@ -55,3 +110,21 @@ function foodCollector(){
 }
 
 foodCollector();
+
+function insertFoodAndNutrition(jsarray){
+	var nutritionInfoObjectWithDynamicKeys = {};
+	for(var obj in jsarray){
+		if(!(jsarray[obj].name == '&#xA0;')){
+			var record = jsarray[obj];				 			
+			nutritionInfoObjectWithDynamicKeys[record.name] = record.value;				 			
+		}
+	}
+	console.log(nutritionInfoObjectWithDynamicKeys);
+	var nutriInfo = new nutritionInfo( nutritionInfoObjectWithDynamicKeys );
+	nutriInfo.save(function (err) {
+	  if (err){
+	  	console.log(err);
+	  } 
+	  console.log('Saved Successfully..');
+	});
+}

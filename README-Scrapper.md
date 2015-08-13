@@ -4,6 +4,7 @@
 
 ##sudo npm install request
 ##sudo npm install cheerio
+##sudo npm install mongoose
 
 ## How to use,
 #### You can use the same scrapper for other website as well.
