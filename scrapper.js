@@ -85,7 +85,9 @@ function nutritionInfoParser (suburl, callback){
 					})					
 			});
 			//console.log(jsonarray)
-			callback(jsonarray)
+			var foodname = $('h2.food-description').text();
+			
+			callback(jsonarray,foodname)
 		}
 	})
 }
@@ -97,11 +99,11 @@ function foodCollector(){
 			$('ul.food_search_results').each(function(){				
 				 $(this).children('li').each(function(){
 				 	var url = $(this).find('div.food_description > a').attr('href');		
-				 	nutritionInfoParser(url.toString(), function(jsarray){
+				 	nutritionInfoParser(url.toString(), function(jsarray,foodname){
 				 		//res.write(JSON.stringify(jsarray))
 				 		jsonarray = []
 				 		//console.log(jsarray);
-				 		insertFoodAndNutrition(jsarray)
+				 		insertFoodAndNutrition(jsarray,foodname)
 				 	})
 				});		
 			})
@@ -111,8 +113,9 @@ function foodCollector(){
 
 foodCollector();
 
-function insertFoodAndNutrition(jsarray){
+function insertFoodAndNutrition(jsarray,foodname){
 	var nutritionInfoObjectWithDynamicKeys = {};
+		nutritionInfoObjectWithDynamicKeys['food_id'] = foodname;
 	for(var obj in jsarray){
 		if(!(jsarray[obj].name == '&#xA0;')){
 			var record = jsarray[obj];				 			
