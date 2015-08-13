@@ -34,6 +34,10 @@ module.exports.routes = {
 
   '/': {
     view: 'homepage'
+  },
+
+  '/Search': {
+    view: 'static/search'
   }
 
   /***************************************************************************

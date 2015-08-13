@@ -4,7 +4,10 @@
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
-
+//<div>
+//	<div width="300px" >Input div</div>
+//	<div width="300px" >Sugestion</div>	
+//</div>
 module.exports = {
 
   tableName: 'nutritioninfos',
